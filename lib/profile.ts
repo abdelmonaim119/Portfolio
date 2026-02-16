@@ -29,12 +29,35 @@ export type Resource = {
   note?: string;
 };
 
+export type EngagementStep = {
+  step: number;
+  title: string;
+};
+
 export const profile = {
   name: "Monaim Abdel",
-  title: "Full-Stack Engineer",
+  title: "Workflow Automation Engineer | n8n • Make • Python • API Systems",
   summary:
-    "I build secure, maintainable web applications with a focus on clean architecture, reliability, and performance.",
-  value: "Simple systems, strong typing, and production-first engineering.",
+    "I design and implement automation systems that eliminate repetitive operations and improve process reliability.",
+  value:
+    "Reduces manual workload by 10–20 hours/week (based on client workflows) through structured automation delivery.",
+  deliverables: [
+    "End-to-end workflow design",
+    "API integrations",
+    "Data synchronization",
+    "Error handling and monitoring",
+    "AI-enhanced automation",
+    "Documentation"
+  ] as string[],
+  industries: ["E-commerce", "SaaS", "Real Estate", "Healthcare", "Finance", "Education"] as string[],
+  engagementProcess: [
+    { step: 1, title: "Workflow audit" },
+    { step: 2, title: "System design" },
+    { step: 3, title: "Implementation" },
+    { step: 4, title: "Testing and monitoring" },
+    { step: 5, title: "Documentation" }
+  ] as EngagementStep[],
+  result: "Operational time reduction and process standardization through monitored workflows and fail-safes.",
   contact: {
     email: "monaimabdel119@gmail.com",
     links: [] as ProfileLink[]
