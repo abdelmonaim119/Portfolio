@@ -3,13 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
 
-const authSecret = process.env.NEXTAUTH_SECRET;
-if (!authSecret) {
-  throw new Error("Missing NEXTAUTH_SECRET in environment.");
-}
-
 export const authOptions: NextAuthOptions = {
-  secret: authSecret,
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt"
   },
