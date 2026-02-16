@@ -6,15 +6,15 @@ export default function ProjectCard({ project }: { project: ProjectListItem }) {
   return (
     <article className="overflow-hidden rounded-2xl border border-paper-200 bg-white">
       <Link href={`/projects/${project.slug}`} className="block">
-        <div className="relative aspect-[16/10] w-full bg-paper-100">
+        <div className="relative aspect-[16/9] w-full bg-ink-950">
           <Image
             src={project.coverImage}
             alt={project.title}
             fill
-            className="object-cover"
+            className="object-contain"
             quality={100}
             unoptimized
-            sizes="(min-width: 1024px) 320px, (min-width: 640px) 50vw, 100vw"
+            sizes="(min-width: 1280px) 560px, (min-width: 1024px) 50vw, (min-width: 640px) 50vw, 100vw"
           />
         </div>
         <div className="p-5">
