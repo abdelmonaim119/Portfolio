@@ -35,7 +35,7 @@ export type EngagementStep = {
 };
 
 export const profile = {
-  name: "Monaim Abdel",
+  name: "K.Abdelmonaim",
   title: "Workflow Automation Engineer | n8n • Make • Python • API Systems",
   summary:
     "I design and implement automation systems that eliminate repetitive operations and improve process reliability.",
