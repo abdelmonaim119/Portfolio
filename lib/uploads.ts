@@ -1,12 +1,14 @@
 import crypto from "crypto";
 import path from "path";
 import { promises as fs } from "fs";
+import { put } from "@vercel/blob";
 
 const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
 const MAX_BYTES = 8 * 1024 * 1024;
 
 const MIME_TO_EXT: Record<string, string> = {
   "image/jpeg": ".jpg",
+  "image/jpg": ".jpg",
   "image/png": ".png",
   "image/webp": ".webp",
   "image/gif": ".gif",
@@ -20,6 +22,7 @@ function isAllowedExtension(ext: string) {
   return (
     e === ".jpg" ||
     e === ".jpeg" ||
+    e === ".jfif" ||
     e === ".png" ||
     e === ".webp" ||
     e === ".gif" ||
@@ -34,29 +37,36 @@ export async function saveImageUpload(file: File): Promise<string> {
     throw new Error("Invalid file.");
   }
 
-  if (!file.type || !file.type.startsWith("image/")) {
-    throw new Error("Only image uploads are allowed.");
-  }
-
   if (file.size > MAX_BYTES) {
     throw new Error("Image is too large.");
   }
 
+  const mime = (file.type ?? "").toLowerCase();
   const originalName = typeof file.name === "string" ? file.name : "";
   const extFromName = path.extname(originalName).toLowerCase();
-  const extFromMime = MIME_TO_EXT[file.type.toLowerCase()] ?? "";
+  const extFromMime = MIME_TO_EXT[mime] ?? "";
   const ext = isAllowedExtension(extFromName) ? extFromName : extFromMime;
 
-  if (!ext || !isAllowedExtension(ext)) {
+  const isImageMime = mime.startsWith("image/") || mime === "application/octet-stream" || !mime;
+  if (!isImageMime || !ext || !isAllowedExtension(ext)) {
     throw new Error("Unsupported image type.");
   }
 
-  await fs.mkdir(UPLOAD_DIR, { recursive: true });
-
-  const filename = `${crypto.randomUUID()}${ext.toLowerCase()}`;
-  const abs = path.join(UPLOAD_DIR, filename);
-
   const buf = Buffer.from(await file.arrayBuffer());
+  const filename = `${crypto.randomUUID()}${ext.toLowerCase()}`;
+
+  const token = process.env.BLOB_READ_WRITE_TOKEN;
+  if (token) {
+    const blob = await put(`portfolio/${filename}`, buf, {
+      access: "public",
+      contentType: mime && mime !== "application/octet-stream" ? mime : "image/jpeg",
+      token
+    });
+    return blob.url;
+  }
+
+  await fs.mkdir(UPLOAD_DIR, { recursive: true });
+  const abs = path.join(UPLOAD_DIR, filename);
   await fs.writeFile(abs, buf);
 
   return `/uploads/${filename}`;

@@ -95,8 +95,8 @@ export async function createProject(
     if (g instanceof File && g.size > 0) {
       try {
         galleryUploads.push(await saveImageUpload(g));
-      } catch (e) {
-        return { error: "Invalid gallery image." };
+      } catch (e: unknown) {
+        return { error: e instanceof Error ? e.message : "Invalid gallery image." };
       }
     }
   }
@@ -104,8 +104,8 @@ export async function createProject(
   let coverPath = "";
   try {
     coverPath = await saveImageUpload(cover);
-  } catch (e) {
-    return { error: "Invalid cover image." };
+  } catch (e: unknown) {
+    return { error: e instanceof Error ? e.message : "Invalid cover image." };
   }
 
   try {
@@ -196,8 +196,8 @@ export async function updateProject(
   if (cover instanceof File && cover.size > 0) {
     try {
       coverImage = await saveImageUpload(cover);
-    } catch (e) {
-      return { error: "Invalid cover image." };
+    } catch (e: unknown) {
+      return { error: e instanceof Error ? e.message : "Invalid cover image." };
     }
   }
 
@@ -217,8 +217,8 @@ export async function updateProject(
     if (g instanceof File && g.size > 0) {
       try {
         newGallery.push(await saveImageUpload(g));
-      } catch (e) {
-        return { error: "Invalid gallery image." };
+      } catch (e: unknown) {
+        return { error: e instanceof Error ? e.message : "Invalid gallery image." };
       }
     }
   }
