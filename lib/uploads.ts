@@ -5,9 +5,28 @@ import { promises as fs } from "fs";
 const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads");
 const MAX_BYTES = 8 * 1024 * 1024;
 
+const MIME_TO_EXT: Record<string, string> = {
+  "image/jpeg": ".jpg",
+  "image/png": ".png",
+  "image/webp": ".webp",
+  "image/gif": ".gif",
+  "image/avif": ".avif",
+  "image/heic": ".heic",
+  "image/heif": ".heif"
+};
+
 function isAllowedExtension(ext: string) {
   const e = ext.toLowerCase();
-  return e === ".jpg" || e === ".jpeg" || e === ".png" || e === ".webp" || e === ".gif";
+  return (
+    e === ".jpg" ||
+    e === ".jpeg" ||
+    e === ".png" ||
+    e === ".webp" ||
+    e === ".gif" ||
+    e === ".avif" ||
+    e === ".heic" ||
+    e === ".heif"
+  );
 }
 
 export async function saveImageUpload(file: File): Promise<string> {
@@ -24,8 +43,11 @@ export async function saveImageUpload(file: File): Promise<string> {
   }
 
   const originalName = typeof file.name === "string" ? file.name : "";
-  const ext = path.extname(originalName);
-  if (!isAllowedExtension(ext)) {
+  const extFromName = path.extname(originalName).toLowerCase();
+  const extFromMime = MIME_TO_EXT[file.type.toLowerCase()] ?? "";
+  const ext = isAllowedExtension(extFromName) ? extFromName : extFromMime;
+
+  if (!ext || !isAllowedExtension(ext)) {
     throw new Error("Unsupported image type.");
   }
 
@@ -39,4 +61,3 @@ export async function saveImageUpload(file: File): Promise<string> {
 
   return `/uploads/${filename}`;
 }
-
