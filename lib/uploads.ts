@@ -56,6 +56,7 @@ export async function saveImageUpload(file: File): Promise<string> {
   const filename = `${crypto.randomUUID()}${ext.toLowerCase()}`;
 
   const token = process.env.BLOB_READ_WRITE_TOKEN;
+  const isVercel = process.env.VERCEL === "1";
   if (token) {
     const blob = await put(`portfolio/${filename}`, buf, {
       access: "public",
@@ -63,6 +64,10 @@ export async function saveImageUpload(file: File): Promise<string> {
       token
     });
     return blob.url;
+  }
+
+  if (isVercel) {
+    throw new Error("BLOB_READ_WRITE_TOKEN is missing in runtime environment.");
   }
 
   await fs.mkdir(UPLOAD_DIR, { recursive: true });
