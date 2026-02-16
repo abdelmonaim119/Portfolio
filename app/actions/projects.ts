@@ -209,7 +209,15 @@ export async function updateProject(
   );
 
   const existingGallery = parseJsonStringArray(existing.gallery);
-  const keptGallery = existingGallery.filter((img) => !removeGallerySet.has(img));
+  const existingGalleryOrder = formData
+    .getAll("existingGallery")
+    .map((v) => String(v))
+    .filter(Boolean);
+  const baseGalleryOrder =
+    existingGalleryOrder.length > 0
+      ? existingGalleryOrder.filter((img) => existingGallery.includes(img))
+      : existingGallery;
+  const keptGallery = baseGalleryOrder.filter((img) => !removeGallerySet.has(img));
 
   const galleryFiles = formData.getAll("gallery");
   const newGallery: string[] = [];
