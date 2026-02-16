@@ -1,11 +1,8 @@
-# Portfolio
-
-Portfolio web app built with Next.js, TypeScript, Tailwind CSS, Prisma, SQLite, and NextAuth.
-
-## Run
-
-```bash
-npm install
-npx prisma migrate dev
-npm run dev
-```
+export default function middleware(
+  req: Parameters<typeof authMiddleware>[0],
+  ev: Parameters<typeof authMiddleware>[1]
+) {
+  const pathname = req.nextUrl.pathname;
+  if (pathname === "/admin") return NextResponse.next();
+  return authMiddleware(req, ev);
+}
