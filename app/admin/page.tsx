@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { listProjects } from "@/lib/projects";
 import { deleteProject } from "@/app/actions/projects";
 
