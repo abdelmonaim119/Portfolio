@@ -252,6 +252,7 @@ export default function ProjectForm({
                   alt="Current cover"
                   fill
                   className="object-cover"
+                  unoptimized
                   sizes="(min-width: 1024px) 33vw, 100vw"
                 />
               </div>
@@ -283,7 +284,8 @@ export default function ProjectForm({
                           src={img}
                           alt="Gallery image"
                           fill
-                          className="object-cover"
+                          className="object-contain"
+                          unoptimized
                           sizes="(min-width: 1024px) 20vw, 40vw"
                         />
                       </div>
