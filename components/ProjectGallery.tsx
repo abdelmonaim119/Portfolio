@@ -13,6 +13,7 @@ export default function ProjectGallery({ title, images }: { title: string; image
             alt={`${title} image`}
             fill
             className="object-cover"
+            quality={95}
             sizes="(min-width: 1024px) 448px, (min-width: 640px) 50vw, 100vw"
           />
         </div>
@@ -20,4 +21,3 @@ export default function ProjectGallery({ title, images }: { title: string; image
     </div>
   );
 }
-

@@ -28,6 +28,7 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
               alt={project.title}
               fill
               className="object-cover"
+              quality={95}
               sizes="(min-width: 1024px) 896px, 100vw"
               priority
             />
