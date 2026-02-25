@@ -69,56 +69,76 @@ function normalizeProject(p: PrismaProject): Project {
   };
 }
 
+async function withFallback<T>(query: () => Promise<T>, fallback: T): Promise<T> {
+  try {
+    return await query();
+  } catch {
+    return fallback;
+  }
+}
+
 export async function listProjects(): Promise<ProjectListItem[]> {
-  const rows = await prisma.project.findMany({
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      shortDescription: true,
-      coverImage: true,
-      tools: true,
-      featured: true,
-      createdAt: true,
-      updatedAt: true
-    },
-    orderBy: { createdAt: "desc" }
-  });
+  const rows = await withFallback(
+    () =>
+      prisma.project.findMany({
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          shortDescription: true,
+          coverImage: true,
+          tools: true,
+          featured: true,
+          createdAt: true,
+          updatedAt: true
+        },
+        orderBy: { createdAt: "desc" }
+      }),
+    []
+  );
   return rows.map(toListItem);
 }
 
 export async function listFeaturedProjects(limit = 3): Promise<FeaturedProject[]> {
-  const rows = await prisma.project.findMany({
-    where: { featured: true },
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      shortDescription: true,
-      coverImage: true,
-      tools: true,
-      featured: true,
-      createdAt: true,
-      updatedAt: true,
-      content: true
-    },
-    orderBy: [{ createdAt: "desc" }],
-    take: limit
-  });
+  const rows = await withFallback(
+    () =>
+      prisma.project.findMany({
+        where: { featured: true },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          shortDescription: true,
+          coverImage: true,
+          tools: true,
+          featured: true,
+          createdAt: true,
+          updatedAt: true,
+          content: true
+        },
+        orderBy: [{ createdAt: "desc" }],
+        take: limit
+      }),
+    []
+  );
   return rows.map((row) => ({ ...toListItem(row), content: row.content }));
 }
 
 export async function getPortfolioMetrics(): Promise<PortfolioMetrics> {
-  const [totalProjects, featuredProjects, toolRows] = await prisma.$transaction([
-    prisma.project.count(),
-    prisma.project.count({ where: { featured: true } }),
-    prisma.project.findMany({
-      select: {
-        tools: true,
-        updatedAt: true
-      }
-    })
-  ]);
+  const [totalProjects, featuredProjects, toolRows] = await withFallback(
+    () =>
+      prisma.$transaction([
+        prisma.project.count(),
+        prisma.project.count({ where: { featured: true } }),
+        prisma.project.findMany({
+          select: {
+            tools: true,
+            updatedAt: true
+          }
+        })
+      ]),
+    [0, 0, [] as Array<{ tools: string; updatedAt: Date }>]
+  );
 
   const uniqueTools = new Set<string>();
   let lastUpdated: Date | null = null;
@@ -139,16 +159,23 @@ export async function getPortfolioMetrics(): Promise<PortfolioMetrics> {
 }
 
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
-  const row = await prisma.project.findUnique({
-    where: { slug }
-  });
+  const row = await withFallback(
+    () =>
+      prisma.project.findUnique({
+        where: { slug }
+      }),
+    null
+  );
   return row ? normalizeProject(row) : null;
 }
 
 export async function getProjectById(id: string): Promise<Project | null> {
-  const row = await prisma.project.findUnique({
-    where: { id }
-  });
+  const row = await withFallback(
+    () =>
+      prisma.project.findUnique({
+        where: { id }
+      }),
+    null
+  );
   return row ? normalizeProject(row) : null;
 }
-
