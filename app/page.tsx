@@ -50,11 +50,20 @@ export default async function HomePage() {
               All Projects
             </Link>
           </div>
-          <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
-            {projects.map((p) => (
-              <ProjectCard key={p.id} project={p} />
-            ))}
-          </div>
+          {projects.length > 0 ? (
+            <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
+              {projects.map((p) => (
+                <ProjectCard key={p.id} project={p} />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-4 rounded-2xl border border-paper-200 bg-white p-6">
+              <p className="text-sm text-ink-800">
+                Featured projects are unavailable right now. Verify database connectivity and
+                `DATABASE_URL` in your deployment environment.
+              </p>
+            </div>
+          )}
         </Section>
 
         <Section
