@@ -5,7 +5,7 @@ import Section from "@/components/Section";
 import { profile } from "@/lib/profile";
 import { extractProjectSections } from "@/lib/projectContent";
 
-export const revalidate = 120;
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const projects = await listFeaturedProjects(3);
@@ -50,7 +50,7 @@ export default async function HomePage() {
               All Projects
             </Link>
           </div>
-          <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-4 grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
             {projects.map((p) => (
               <ProjectCard key={p.id} project={p} />
             ))}
@@ -59,28 +59,60 @@ export default async function HomePage() {
 
         <Section
           id="skills"
-          title="Skills and Competencies"
-          description="Tools and technologies used across projects, with evidence where available."
+          title="What I Deliver"
+          description="Workflow automation, API integrations, AI-enhanced pipelines, and data processing systems."
         >
           <div className="grid gap-5 lg:grid-cols-2">
-            {profile.skills.map((group) => (
-              <div key={group.title} className="rounded-2xl border border-paper-200 bg-white p-6">
-                <h3 className="text-sm font-semibold text-ink-950">{group.title}</h3>
-                <ul className="mt-4 space-y-2">
-                  {group.items.map((item) => (
-                    <li key={item.name} className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="text-sm font-medium text-ink-950">{item.name}</span>
-                      <span className="rounded-full border border-paper-200 bg-paper-100 px-3 py-1 text-xs font-medium text-ink-900">
-                        {item.level}
-                      </span>
-                      {item.evidence ? (
-                        <span className="w-full text-xs text-ink-800">{item.evidence}</span>
-                      ) : null}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            <div className="rounded-2xl border border-paper-200 bg-white p-6">
+              <h3 className="text-sm font-semibold text-ink-950">Deliverables</h3>
+              <ul className="mt-4 space-y-2">
+                {profile.deliverables.map((item) => (
+                  <li key={item} className="text-sm text-ink-950/90">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-paper-200 bg-white p-6">
+              <h3 className="text-sm font-semibold text-ink-950">Industries</h3>
+              <ul className="mt-4 flex flex-wrap gap-2">
+                {profile.industries.map((industry) => (
+                  <li
+                    key={industry}
+                    className="rounded-full border border-paper-200 bg-paper-100 px-3 py-1 text-xs font-medium text-ink-900"
+                  >
+                    {industry}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </Section>
+
+        <Section
+          title="Engagement Process"
+          description="Structured implementation flow from audit to documentation."
+        >
+          <div className="rounded-2xl border border-paper-200 bg-white p-6">
+            <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+              {profile.engagementProcess.map((item) => (
+                <li key={item.step} className="rounded-xl border border-paper-200 bg-paper-50 p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-ink-800">
+                    Step {item.step}
+                  </p>
+                  <p className="mt-2 text-sm font-medium text-ink-950">{item.title}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </Section>
+
+        <Section
+          title="Result"
+          description="Outcome-focused delivery with measurable operational impact."
+        >
+          <div className="rounded-2xl border border-paper-200 bg-white p-6">
+            <p className="text-sm leading-relaxed text-ink-950/90">{profile.result}</p>
           </div>
         </Section>
 

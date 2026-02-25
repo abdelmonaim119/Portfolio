@@ -12,7 +12,7 @@ export default function Navbar() {
             Portfolio
           </Link>
           <Link href="/#skills" className="text-sm font-medium text-ink-800 hover:text-ink-950">
-            Skills
+            Deliverables
           </Link>
           <Link href="/#case-studies" className="text-sm font-medium text-ink-800 hover:text-ink-950">
             Case Studies

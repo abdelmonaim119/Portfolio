@@ -252,6 +252,7 @@ export default function ProjectForm({
                   alt="Current cover"
                   fill
                   className="object-cover"
+                  unoptimized
                   sizes="(min-width: 1024px) 33vw, 100vw"
                 />
               </div>
@@ -277,13 +278,15 @@ export default function ProjectForm({
               <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {project.gallery.map((img) => (
                   <label key={img} className="block">
+                    <input type="hidden" name="existingGallery" value={img} />
                     <div className="overflow-hidden rounded-lg border border-paper-200 bg-white">
                       <div className="relative aspect-square w-full">
                         <Image
                           src={img}
                           alt="Gallery image"
                           fill
-                          className="object-cover"
+                          className="object-contain"
+                          unoptimized
                           sizes="(min-width: 1024px) 20vw, 40vw"
                         />
                       </div>
