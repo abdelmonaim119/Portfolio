@@ -14,11 +14,20 @@ export default async function PortfolioPage() {
           <p className="text-sm text-ink-800">Selected work and recent projects.</p>
         </div>
 
-        <div className="mt-7 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
-          {projects.map((p) => (
-            <ProjectCard key={p.id} project={p} />
-          ))}
-        </div>
+        {projects.length > 0 ? (
+          <div className="mt-7 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
+            {projects.map((p) => (
+              <ProjectCard key={p.id} project={p} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-7 rounded-2xl border border-paper-200 bg-white p-6">
+            <p className="text-sm text-ink-800">
+              No projects are currently available. If you already added projects, check database
+              connectivity and `DATABASE_URL` configuration.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
