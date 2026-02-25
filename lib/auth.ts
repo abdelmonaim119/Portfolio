@@ -19,22 +19,28 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
+        const username = credentials?.username?.trim();
+        const password = credentials?.password ?? "";
+        const envUsername = process.env.ADMIN_USERNAME?.trim();
+        const envPassword = process.env.ADMIN_PASSWORD ?? "";
+
+        if (!username || !password) return null;
+
         try {
-          const username = credentials?.username?.trim();
-          const password = credentials?.password ?? "";
-
-          if (!username || !password) return null;
-
           const admin = await prisma.admin.findUnique({ where: { username } });
-          if (!admin) return null;
-
-          const ok = await bcrypt.compare(password, admin.passwordHash);
-          if (!ok) return null;
-
-          return { id: admin.id, name: admin.username };
+          if (admin) {
+            const ok = await bcrypt.compare(password, admin.passwordHash);
+            if (ok) return { id: admin.id, name: admin.username };
+          }
         } catch {
-          return null;
+          // Fallback below handles temporary DB/network failures.
         }
+
+        if (envUsername && envPassword && username === envUsername && password === envPassword) {
+          return { id: "env-admin", name: envUsername };
+        }
+
+        return null;
       }
     })
   ],
