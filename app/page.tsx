@@ -5,7 +5,7 @@ import Section from "@/components/Section";
 import { profile } from "@/lib/profile";
 import { extractProjectSections } from "@/lib/projectContent";
 
-export const revalidate = 120;
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const projects = await listFeaturedProjects(3);

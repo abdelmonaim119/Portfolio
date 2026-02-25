@@ -1,7 +1,7 @@
 import { listProjects } from "@/lib/projects";
 import ProjectCard from "@/components/ProjectCard";
 
-export const revalidate = 120;
+export const dynamic = "force-dynamic";
 
 export default async function PortfolioPage() {
   const projects = await listProjects();
